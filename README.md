@@ -171,7 +171,8 @@ secrets before enabling the deployment job:
 - `UXER_DEPLOY_HOST` — server hostname or IP address
 - `UXER_DEPLOY_USER` — SSH user on the server
 - `DEPLOY_PATH` — absolute path of this Git checkout on the server
-- `UXER_DEPLOY_SSH_KEY` — private SSH key authorized for that user
+- `UXER_DEPLOY_SSH_KEY` — the complete private SSH key authorized for that
+  user, including its `-----BEGIN ... PRIVATE KEY-----` and `-----END ...` lines
 - `DEPLOY_KNOWN_HOSTS` — the server's pinned `known_hosts` entry
 
 The server must have Podman Compose installed, and the checkout must already

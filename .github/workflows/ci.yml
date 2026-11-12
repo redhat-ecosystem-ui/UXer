@@ -59,7 +59,12 @@ jobs:
         run: |
           set -eu
           eval "$(ssh-agent -s)"
-          printf '%s\n' "$DEPLOY_SSH_KEY" | ssh-add -
+          # GitHub Secrets should contain the complete private key. Normalize
+          # CRLF and literal "\\n" values so keys pasted from different
+          # environments still reach ssh-add in PEM/OpenSSH form.
+          deploy_key="$DEPLOY_SSH_KEY"
+          deploy_key="${deploy_key//\\n/$'\n'}"
+          printf '%s\n' "$deploy_key" | tr -d '\r' | ssh-add -
           install -m 700 -d "$HOME/.ssh"
           printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/known_hosts"
