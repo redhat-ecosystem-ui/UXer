@@ -156,7 +156,7 @@ test.describe('comment routing', () => {
       await expect(page.getByText(/Thread #/)).toBeVisible();
 
       // The wizard must not be corrupted while the comment focus is replayed.
-      await expect(frame.getByRole('region', { name: 'Create external IP pool wizard' })).toBeVisible({
+      await expect(frame.getByRole('heading', { name: 'Create external IP pool' })).toBeVisible({
         timeout: 15_000,
       });
       await expect(frame.getByText('Fix the highlighted errors before continuing')).toHaveCount(0);
