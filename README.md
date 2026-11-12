@@ -162,6 +162,21 @@ afterwards.
 The repo ships a multi-stage `Containerfile` (Node → Go → Alpine runtime) and
 a `compose.yml` compatible with **Podman Compose** (and Docker Compose).
 
+### GitHub Actions deployment
+
+Pushes to `main` run the test suite and, when it passes, rebuild and restart
+the production container. Configure these GitHub Actions
+secrets before enabling the deployment job:
+
+- `UXER_DEPLOY_HOST` — server hostname or IP address
+- `UXER_DEPLOY_USER` — SSH user on the server
+- `DEPLOY_PATH` — absolute path of this Git checkout on the server
+- `UXER_DEPLOY_SSH_KEY` — private SSH key authorized for that user
+- `DEPLOY_KNOWN_HOSTS` — the server's pinned `known_hosts` entry
+
+The server must have Podman Compose installed, and the checkout must already
+have the repository's `origin` remote configured.
+
 ### Prerequisites
 
 - [Podman](https://podman.io/) 4.x+
