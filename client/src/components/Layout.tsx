@@ -16,7 +16,6 @@ import {
 import LogoutIcon from '@mui/icons-material/Logout';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import LanguageToggle from './LanguageToggle';
 import { useAuth } from '../auth/AuthContext';
 import { useThemeMode } from '../theme/ThemeModeContext';
 
@@ -44,7 +43,6 @@ export default function Layout({ children }: { children: ReactNode }) {
               {t('app.tagline')}
             </Typography>
           </Box>
-          <LanguageToggle />
           <Tooltip title={mode === 'dark' ? t('layout.switchToLight') : t('layout.switchToDark')}>
             <IconButton onClick={toggle} aria-label={t('layout.toggleColorTheme')}>
               {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}

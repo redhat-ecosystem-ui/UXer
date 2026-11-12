@@ -19,7 +19,6 @@ import { useAuth } from '../auth/AuthContext';
 import { resolveNextPath } from '../auth/redirect';
 import { useThemeMode } from '../theme/ThemeModeContext';
 import { api } from '../api/client';
-import LanguageToggle from '../components/LanguageToggle';
 
 type AuthMode = 'login' | 'signup' | 'forgot';
 
@@ -99,7 +98,6 @@ export default function LoginPage() {
       sx={{ position: 'relative' }}
     >
       <Box sx={{ position: 'absolute', top: 16, right: 16, display: 'flex', gap: 1 }}>
-        <LanguageToggle />
         <Tooltip
           title={themeMode === 'dark' ? t('layout.switchToLight') : t('layout.switchToDark')}
         >

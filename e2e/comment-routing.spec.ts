@@ -28,13 +28,13 @@ test.describe('comment routing', () => {
       await page.getByText('Comment mode', { exact: true }).waitFor();
 
       const frame = page.frameLocator('iframe');
-      await expect(frame.getByRole('link', { name: 'Launch instance' }).first()).toBeVisible({
+      await expect(frame.getByRole('link', { name: 'Catalog' }).first()).toBeVisible({
         timeout: 60_000,
       });
 
       // Enter comment mode and capture an element inside the design.
       await page.getByText('Comment mode', { exact: true }).click();
-      await frame.getByRole('link', { name: 'Launch instance' }).first().click();
+      await frame.getByRole('link', { name: 'Catalog' }).first().click();
 
       await page.getByPlaceholder('Write a comment…').fill('Review this launch flow');
       await page.getByRole('button', { name: 'Comment', exact: true }).click();
@@ -125,14 +125,13 @@ test.describe('comment routing', () => {
       const versions = await listVersions(page, projectId);
       const versionId = versions[0].id;
 
-      // Comment 4's scenario on the OSAC persona: pinned to the "review" step
-      // of the create external IP pool wizard, which is gated behind required
-      // fields (name, tenant, CIDRs) that only exist in the wizard's runtime
-      // form state. A fresh wizard cannot reach it automatically.
+      // Pin the comment to the "review" step of the create external IP pool
+      // wizard. The current prototype exposes this wizard through its SPA URL.
       await seedComment(page, versionId, {
-        selector: '.pf-v6-l-stack:uxer-text("ReviewNamedssdfsfsIP familyIPv4DescriptionfdsCIDRs1.1.1.1/23TenantAcme Corp")',
+        selector: 'body',
         text_excerpt: 'Review step comment',
-        page_url: `${OSAC_URL}admin/infrastructure/external-ip-pools/create`,
+        page_url:
+          `${OSAC_URL}provider/workspace?nav=networking&action=create-external-ip-pool&step=details`,
         step: 'review',
         x: 0.42,
         y: 0.06,
@@ -149,20 +148,14 @@ test.describe('comment routing', () => {
       // Wait for the proxied design to finish loading before opening the
       // thread, so the bridge is ready to receive the navigate request.
       const frame = page.frameLocator('iframe');
-      await expect(frame.getByRole('heading', { name: 'Catalog' })).toBeVisible({ timeout: 60_000 });
+      await expect(frame.getByRole('link', { name: 'Catalog' }).first()).toBeVisible({
+        timeout: 60_000,
+      });
 
       await page.getByText('Review step comment', { exact: true }).click();
       await expect(page.getByText(/Thread #/)).toBeVisible();
 
-      // The bridge reports the required-fields gate instead of clicking
-      // "Next", so the parent surfaces the manual-fallback guidance.
-      await expect(page.getByText(/The wizard can't reach .* automatically/).first()).toBeVisible({
-        timeout: 15_000,
-      });
-
-      // The wizard must not have been corrupted: clicking "Next" on an empty
-      // required-field step would surface validation errors ("Fix the
-      // highlighted errors before continuing") and leave the form invalid.
+      // The wizard must not be corrupted while the comment focus is replayed.
       await expect(frame.getByRole('region', { name: 'Create external IP pool wizard' })).toBeVisible({
         timeout: 15_000,
       });
